@@ -41,7 +41,7 @@ function App() {
       formData.append('selfie', selfieBlob, 'selfie.jpg');
 
       // Send to backend
-      const response = await axios.post('http://192.168.16.134:3001/verify', formData, {
+      const response = await axios.post('https://kyc-urrb.onrender.com/verify', formData, {
         headers: {
           'Content-Type': 'multipart/form-data',
         },
