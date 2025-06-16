@@ -8,7 +8,7 @@ function App() {
   const [passportFile, setPassportFile] = useState(null);
   const [selfieDataUrl, setSelfieDataUrl] = useState(null);
   const [isCapturing, setIsCapturing] = useState(false);
-
+  const [ IsLoading, setIsLoading ] = useState(false)
   // Handle passport photo upload
   const handlePassportUpload = (e) => {
     const file = e.target.files[0];
@@ -41,16 +41,21 @@ function App() {
       formData.append('selfie', selfieBlob, 'selfie.jpg');
 
       // Send to backend
-      const response = await axios.post('https://kyc-urrb.onrender.com/verify', formData, {
+      const response = await axios.post('http://192.168.16.134:3001/verify', formData, {
         headers: {
           'Content-Type': 'multipart/form-data',
         },
       });
 
-      alert('KYC submitted successfully!');
+      // alert('KYC submitted successfully!');
       console.log(response.data);
+      if(response.data.verified) {
+        alert('KYC verified successfully')
+      } else {
+        alert('KYC not verified')
+      }
     } catch (error) {
-      console.error('Submission error:', error);
+      console.log('Submission error:', error);
       alert('Failed to submit KYC data.');
     }
   };
@@ -74,7 +79,14 @@ function App() {
       <section>
         <h2>2. Capture a Selfie</h2>
         {!isCapturing && (
-          <button onClick={() => setIsCapturing(true)}>Open Front Camera</button>
+          <button 
+          onClick={() => {
+            setSelfieDataUrl(null)
+            setIsCapturing(true)
+          }}
+          >
+            Open Front Camera
+          </button>
         )}
 
         {isCapturing && (
