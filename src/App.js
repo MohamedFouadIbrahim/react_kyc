@@ -2,7 +2,7 @@ import React, { useRef, useState } from 'react';
 import Webcam from 'react-webcam';
 import axios from 'axios';
 import './App.css';
-
+import { Atom } from 'react-loading-indicators'
 function App() {
   const webcamRef = useRef(null);
   const [passportFile, setPassportFile] = useState(null);
@@ -31,6 +31,8 @@ function App() {
       return;
     }
 
+    setIsLoading(true)
+
     try {
       // Convert selfie data URL to Blob
       const selfieBlob = await (await fetch(selfieDataUrl)).blob();
@@ -49,13 +51,16 @@ function App() {
 
       // alert('KYC submitted successfully!');
       console.log(response.data);
+      setIsLoading(false)
       if(response.data.verified) {
         alert('KYC verified successfully')
       } else {
         alert('KYC not verified')
       }
+      
     } catch (error) {
       console.log('Submission error:', error);
+      setIsLoading(false)
       alert('Failed to submit KYC data.');
     }
   };
@@ -110,10 +115,12 @@ function App() {
         )}
       </section>
 
-      <button onClick={handleSubmit} style={{ marginTop: '20px' }}>
-        Submit to Backend
-      </button>
-    </div>
+      {IsLoading ? <Atom color={["#32cd32", "#327fcd", "#cd32cd", "#cd8032"]} />:    
+        <button onClick={handleSubmit} style={{ marginTop: '20px' }}>
+              Submit to Backend
+        </button>
+      }
+  </div>
   );
 }
 
